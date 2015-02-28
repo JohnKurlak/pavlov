@@ -287,6 +287,10 @@
                 actual();
                 adapter.assert(false, message);
             } catch (e) {
+                if (e instanceof Error) {
+                    e = e.message;
+                }
+
                 // so, this bit of weirdness is basically a way to allow for the fact
                 // that the test may have specified a particular type of error to catch, or not.
                 // and if not, e would always === e.

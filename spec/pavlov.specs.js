@@ -90,7 +90,7 @@ pavlov.specify("Pavlov", function() {
 
     describe("version", function(){
         it("should return the current version", function(){
-            assert(pavlov.version).equals('0.3.0pre');
+            assert(pavlov.version).equals('0.4.0pre');
         });
     });
 
@@ -901,6 +901,30 @@ pavlov.specify("Pavlov", function() {
                     // run spec assertion while underlying qunit assertion is mocked
                     assert(function(){
                         throw("some other error description");
+                    }).throwsException("expected description", "message");
+                });
+
+                // verify correct arguments would have been passed to qunit
+                assert(passedArgs).contentsEqual([false,"message"]);
+            });
+
+            it("should pass true to adapter's assert when function throws exception object with expected description", function(){
+                var passedArgs = mock(pavlov.adapter, 'assert', function(){
+                    // run spec assertion while underlying qunit assertion is mocked
+                    assert(function(){
+                        throw(new Error("expected description"));
+                    }).throwsException("expected description", "message");
+                });
+
+                // verify correct arguments would have been passed to qunit
+                assert(passedArgs).contentsEqual([true,"message"]);
+            });
+
+            it("should pass false to adapter's assert when function throws exception object with unexpected description", function(){
+                var passedArgs = mock(pavlov.adapter, 'assert', function(){
+                    // run spec assertion while underlying qunit assertion is mocked
+                    assert(function(){
+                        throw(newError("some other error description"));
                     }).throwsException("expected description", "message");
                 });
 
